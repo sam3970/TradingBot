@@ -1,3 +1,8 @@
+//Name       : TradingBot 
+//Ver        : 0.2.6
+//Creator    : sam3970
+//Descriptor : 코인 가격 및 김프 알리미, 코인 자동거래 기능(추가 예정)
+
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
 
     isGroupChat = true
