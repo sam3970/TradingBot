@@ -1,5 +1,5 @@
 //Name       : TradingBot 
-//Ver        : 0.2.6
+//Ver        : 0.2.7
 //Creator    : sam3970
 //Descriptor : 코인 가격 및 김프 알리미, 코인 자동거래 기능(추가 예정)
 
@@ -11,8 +11,8 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     function parsingEtc(etc)
     {
         etc = etc.split(",")[9]
-        return etc = etc.split(":")[1]
-        //etc = etc.split(".")[0]
+        etc = etc.split(":")[1]
+        return Math.round(etc * 100) / 100
     }
 
     //금일 총 거래대금
@@ -27,16 +27,16 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     function parsingHighPrice(highp)
     {
         highp = highp.split(",")[7]
-        return highp = highp.split(":")[1]
-        //highp = highp.split(".")[0]
+        highp = highp.split(":")[1]
+        return Math.round(highp * 100) / 100
     }
 
     //금일 최저가
     function parsingLowPrice(lowp)
     {
         lowp = lowp.split(",")[8]
-        return lowp = lowp.split(":")[1]
-        //lowp = lowp.split(".")[0]
+        lowp = lowp.split(":")[1]
+        return Math.round(highp * 100) / 100
     }
 
     //금일 변동율
