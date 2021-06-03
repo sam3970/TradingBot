@@ -1,5 +1,5 @@
 //Name       : TradingBot 
-//Ver        : 0.2.7
+//Ver        : 0.2.8
 //Creator    : sam3970
 //Descriptor : 코인 가격 및 김프 알리미, 코인 자동거래 기능(추가 예정)
 
@@ -64,10 +64,10 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     //김프 계산
     function exchangeKP(binance)
     {
-      //기능 개선중
-      if (binance.includes('Invalid') == true)
+      //null 처리 기능(Binance에 없는 data 일 경우)
+      if (binance == null)
       {
-        return "서비스 미지원"
+        return "(미지원)NaN"
       }
       else
       {
