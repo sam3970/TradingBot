@@ -1,5 +1,5 @@
 //Name       : TradingBot 
-//Ver        : 0.2.8
+//Ver        : 0.2.9
 //Creator    : sam3970
 //Descriptor : 코인 가격 및 김프 알리미, 코인 자동거래 기능(추가 예정)
 
@@ -52,7 +52,8 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     {
         changep = changep.split(",")[15]
         changep = changep.split(":")[1]
-        return changep = changep.substr(0,5)
+        var changeRatio = (changep * 100).toFixed(2)
+        return changeRatio
     }
 
     //천 단위 쉼표
@@ -1422,6 +1423,60 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-doge")
         var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-doge")
         var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=DOGEUSDT")
+    
+        parsingEtc(etc)
+
+        parsingTotal(total)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        parsingChangeRate(changer)
+
+        parsingChangePrice(changep)
+
+        printResult(parsingChangeRate(changer))
+
+        exchangeKP(binance)
+      }
+
+      if (msg == "/쎄타퓨엘" || msg == "/쎄타" || msg == "/세타" || msg == "/tfuel") 
+      {
+        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
+        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
+        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
+        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
+        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
+        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=TFUELUSDT")
+    
+        parsingEtc(etc)
+
+        parsingTotal(total)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        parsingChangeRate(changer)
+
+        parsingChangePrice(changep)
+
+        printResult(parsingChangeRate(changer))
+
+        exchangeKP(binance)
+      }
+
+      if (msg == "/스트라티스" || msg == "/strax") 
+      {
+        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
+        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
+        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
+        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
+        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
+        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=STRAXUSDT")
     
         parsingEtc(etc)
 
