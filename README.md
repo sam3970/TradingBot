@@ -1,3 +1,5 @@
 # TradingBot
--사용은 자유입니다.
--코드를 임의로 수정 및 배포하는건 불가!
+## Name       : TradingBot 
+## Ver        : 0.3.1
+## Creator    : sam3970
+## Descriptor : 코인 가격 및 김프 알리미, 코인 자동거래 기능
