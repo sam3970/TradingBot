@@ -54,7 +54,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     //Rsi Candle 지표 계산
     function Rsi(candle)
     {
-      let j = 11
+      let j = 11 //(분봉시) 6
       let ascend_sum = 0
       let descend_sum = 0
 
@@ -74,7 +74,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         
         if (candle_Num[i] == "null")
         {
-          candle_Num[i] = 0
+          candle_Num[i] = 20 //RSI k-means 학습 결과 이평선 평균값은 20을 가지는 것으로 확인
         }
         
         if (candle_Num[i] >= 0)
@@ -86,7 +86,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         {
           descend_sum = parseFloat(candle_Num[i]) + descend_sum
         }
-        j = j + 13
+        j = j + 13 //(분봉시) 11
       }
 
       rsi_asum = Math.round(ascend_sum * 100) / 100
@@ -1512,16 +1512,16 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         exchangeKP(binance)
       }
 
-      /*if (msg == "/페이코인" || msg == "/페이" || msg == "/pci" || msg == "/PCI") 
+      if (msg == "/메타디움" || msg == "/메타" || msg == "/meta" || msg == "/META") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pci")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pci")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pci")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pci")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pci")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pci")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=PCIUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-pci&count=14")
+        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
+        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
+        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
+        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
+        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
+        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=METAUSDT")
+        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-meta&count=14")
     
         parsingEtc(etc)
 
@@ -1540,7 +1540,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         printResult(parsingChangeRate(changer))
 
         exchangeKP(binance)
-      }*/
+      }
 
       if (msg == "/스토리지" || msg == "/storj" || msg == "/STORJ") 
       {
@@ -1722,16 +1722,16 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         exchangeKP(binance)
       }
 
-      /*if (msg == "/퀴즈톡" || msg == "/퀴즈" || msg == "/qtcon" || msg == "/QTCON") 
+      if (msg == "/디센트럴랜드" || msg == "/디센" || msg == "/mana" || msg == "/MANA") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtcon")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtcon")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtcon")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtcon")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtcon")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtcon")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=QTCONUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-qtcon&count=14")
+        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
+        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
+        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
+        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
+        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
+        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MANAUSDT")
+        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-mana&count=14")
     
         parsingEtc(etc)
 
@@ -1750,7 +1750,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         printResult(parsingChangeRate(changer))
 
         exchangeKP(binance)
-      }*/
+      }
 
       if (msg == "/아인스타이늄" || msg == "/아인" || msg == "/emc2" || msg == "/EMC2") 
       {
@@ -1762,6 +1762,66 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-emc2")
         var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=EMC2USDT")
         var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-emc2&count=14")
+    
+        parsingEtc(etc)
+
+        parsingTotal(total)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        parsingChangeRate(changer)
+
+        parsingChangePrice(changep)
+
+        Rsi(candle)
+
+        printResult(parsingChangeRate(changer))
+
+        exchangeKP(binance)
+      }
+
+      if (msg == "/베이직어텐션토큰" || msg == "/베이직" || msg == "/bat" || msg == "/BAT") 
+      {
+        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
+        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
+        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
+        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
+        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
+        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BATUSDT")
+        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-bat2&count=14")
+    
+        parsingEtc(etc)
+
+        parsingTotal(total)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        parsingChangeRate(changer)
+
+        parsingChangePrice(changep)
+
+        Rsi(candle)
+
+        printResult(parsingChangeRate(changer))
+
+        exchangeKP(binance)
+      }
+
+      if (msg == "/보라"  || msg == "/bora" || msg == "/BORA") 
+      {
+        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
+        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
+        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
+        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
+        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
+        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BORAUSDT")
+        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-bora&count=14")
     
         parsingEtc(etc)
 
