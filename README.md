@@ -1,5 +1,5 @@
-# TradingBot
-## Name       : TradingBot 
-## Ver        : 0.3.3
-## Creator    : sam3970
-## Descriptor : 코인 가격 및 김프 알리미, 코인 자동거래 기능
+### TradingBot
+- Name       : TradingBot 
+- Ver        : 0.6.9
+- Creator    : sam3970
+- Descriptor : Coin Price && Information Alert Bot
