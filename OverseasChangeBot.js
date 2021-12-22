@@ -605,4 +605,28 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
         binanceResult(binancePrice(binance))
       }
+
+      if (msg == "/루나" || msg == "/luna" || msg == "/LUNA") 
+      {
+        
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=LUNAUSDT")
+        var total = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=LUNAUSDT")
+        var highp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=LUNAUSDT")
+        var lowp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=LUNAUSDT")
+        var changer = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=LUNAUSDT")
+        var changep = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=LUNAUSDT")
+        //var candle = Utils.getHtmlFromWeb("https://www.binance.com/api/v3/klines?symbol=LUNAUSDT&limit=14&interval=1d")
+        
+        parsingHighPrice(highp)
+
+        parsingChangePrice(changep)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        //Rsi(candle)
+
+        binanceResult(binancePrice(binance))
+      }
 }
