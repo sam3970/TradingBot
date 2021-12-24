@@ -582,7 +582,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         binanceResult(binancePrice(binance))
       }
 
-      if (msg == "/니어프로토콜" || msg == "/니어" || msg == "/near" || msg == "/NEAR") 
+      if (msg == "/b니어프로토콜" || msg == "/b니어" || msg == "/bnear" || msg == "/BNEAR") 
       {
         
         var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=NEARUSDT")
@@ -616,6 +616,54 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         var changer = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=LUNAUSDT")
         var changep = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=LUNAUSDT")
         //var candle = Utils.getHtmlFromWeb("https://www.binance.com/api/v3/klines?symbol=LUNAUSDT&limit=14&interval=1d")
+        
+        parsingHighPrice(highp)
+
+        parsingChangePrice(changep)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        //Rsi(candle)
+
+        binanceResult(binancePrice(binance))
+      }
+
+      if (msg == "/깃" || msg == "/gtc" || msg == "/GTC") 
+      {
+        
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=GTCUSDT")
+        var total = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=GTCUSDT")
+        var highp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=GTCUSDT")
+        var lowp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=GTCUSDT")
+        var changer = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=GTCUSDT")
+        var changep = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=GTCUSDT")
+        //var candle = Utils.getHtmlFromWeb("https://www.binance.com/api/v3/klines?symbol=GTCUSDT&limit=14&interval=1d")
+        
+        parsingHighPrice(highp)
+
+        parsingChangePrice(changep)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        //Rsi(candle)
+
+        binanceResult(binancePrice(binance))
+      }
+
+      if (msg == "/오션" || msg == "/ocean" || msg == "/OCEAN") 
+      {
+        
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=OCEANUSDT")
+        var total = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=OCEANUSDT")
+        var highp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=OCEANUSDT")
+        var lowp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=OCEANUSDT")
+        var changer = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=OCEANUSDT")
+        var changep = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=OCEANUSDT")
+        //var candle = Utils.getHtmlFromWeb("https://www.binance.com/api/v3/klines?symbol=OCEANUSDT&limit=14&interval=1d")
         
         parsingHighPrice(highp)
 
