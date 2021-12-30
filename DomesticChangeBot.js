@@ -194,15 +194,15 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     {
         if (changer == "RISE")
         {
-            return replier.reply(""+msg+"\n\n[현재가격]\n"+priceToString(parsingEtc(etc))+"원 (▲"+parsingChangePrice(changep)+"%) \n\n[김치프리미엄]\n"+exchangeKP(binance)+"% \n\n[금일최저가 ~ 금일최고가]\n"+priceToString(parsingLowPrice(lowp))+"원 ~ "+priceToString(parsingHighPrice(highp))+"원 \n\n[RSI Value]\n"+Rsi_1h(candle)+" \n\n[금일거래량]\n"+priceToString(parsingTotal(total))+"원 \n-by Upbit");
+            return replier.reply(""+msg+"\n\n[현재가격]\n"+priceToString(parsingEtc(etc))+"원 (▲"+parsingChangePrice(changep)+"%) \n\n[김치프리미엄]\n"+exchangeKP(binance)+"% \n\n[금일최저가 ~ 금일최고가]\n"+priceToString(parsingLowPrice(lowp))+"원 ~ "+priceToString(parsingHighPrice(highp))+"원 \n\n[RSI Value]\n"+Rsi_1h(candle)+" \n\n[금일거래량]\n"+priceToString(parsingTotal(total))+"원 \n-Upbit");
         }
         else if (changer == "FALL")
         {
-            return replier.reply(""+msg+"\n\n[현재가격]\n"+priceToString(parsingEtc(etc))+"원 (▼"+parsingChangePrice(changep)+"%) \n\n[김치프리미엄]\n"+exchangeKP(binance)+"% \n\n[금일최저가 ~ 금일최고가]\n"+priceToString(parsingLowPrice(lowp))+"원 ~ "+priceToString(parsingHighPrice(highp))+"원 \n\n[RSI Value]\n"+Rsi_1h(candle)+" \n\n[금일거래량]\n"+priceToString(parsingTotal(total))+"원 \n-by Upbit");
+            return replier.reply(""+msg+"\n\n[현재가격]\n"+priceToString(parsingEtc(etc))+"원 (▼"+parsingChangePrice(changep)+"%) \n\n[김치프리미엄]\n"+exchangeKP(binance)+"% \n\n[금일최저가 ~ 금일최고가]\n"+priceToString(parsingLowPrice(lowp))+"원 ~ "+priceToString(parsingHighPrice(highp))+"원 \n\n[RSI Value]\n"+Rsi_1h(candle)+" \n\n[금일거래량]\n"+priceToString(parsingTotal(total))+"원 \n-Upbit");
         }
         else
         {
-            return replier.reply(""+msg+"\n\n[현재가격]\n"+priceToString(parsingEtc(etc))+"원 (="+parsingChangePrice(changep)+"%) \n\n[김치프리미엄]\n"+exchangeKP(binance)+"% \n\n[금일최저가 ~ 금일최고가]\n"+priceToString(parsingLowPrice(lowp))+"원 ~ "+priceToString(parsingHighPrice(highp))+"원 \n\n[RSI Value]\n"+Rsi_1h(candle)+" \n\n[금일거래량]\n"+priceToString(parsingTotal(total))+"원 \n-by Upbit");
+            return replier.reply(""+msg+"\n\n[현재가격]\n"+priceToString(parsingEtc(etc))+"원 (="+parsingChangePrice(changep)+"%) \n\n[김치프리미엄]\n"+exchangeKP(binance)+"% \n\n[금일최저가 ~ 금일최고가]\n"+priceToString(parsingLowPrice(lowp))+"원 ~ "+priceToString(parsingHighPrice(highp))+"원 \n\n[RSI Value]\n"+Rsi_1h(candle)+" \n\n[금일거래량]\n"+priceToString(parsingTotal(total))+"원 \n-Upbit");
         }
     }
 
@@ -211,15 +211,15 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     {
         if (changer == "RISE")
         {
-            return replier.reply(""+msg+"\n\n[현재가격]\n"+priceToString(parsingEtc(etc))+"원 (▲"+parsingChangePrice(changep)+"%) \n\n[김치프리미엄]\n"+exchangeKP(binance)+"% \n\n[금일최저가 ~ 금일최고가]\n"+priceToString(parsingLowPrice(lowp))+"원 ~ "+priceToString(parsingHighPrice(highp))+"원 \n\n[RSI Value]\n"+Rsi(candle)+" \n\n[금일거래량]\n"+priceToString(parsingTotal(total))+"원 \n-by Upbit");
+            return replier.reply(""+msg+"\n\n[현재가격]\n"+priceToString(parsingEtc(etc))+"원 (▲"+parsingChangePrice(changep)+"%) \n\n[김치프리미엄]\n"+exchangeKP(binance)+"% \n\n[금일최저가 ~ 금일최고가]\n"+priceToString(parsingLowPrice(lowp))+"원 ~ "+priceToString(parsingHighPrice(highp))+"원 \n\n[RSI Value]\n"+Rsi(candle)+" \n\n[금일거래량]\n"+priceToString(parsingTotal(total))+"원 \n-Upbit");
         }
         else if (changer == "FALL")
         {
-            return replier.reply(""+msg+"\n\n[현재가격]\n"+priceToString(parsingEtc(etc))+"원 (▼"+parsingChangePrice(changep)+"%) \n\n[김치프리미엄]\n"+exchangeKP(binance)+"% \n\n[금일최저가 ~ 금일최고가]\n"+priceToString(parsingLowPrice(lowp))+"원 ~ "+priceToString(parsingHighPrice(highp))+"원 \n\n[RSI Value]\n"+Rsi(candle)+" \n\n[금일거래량]\n"+priceToString(parsingTotal(total))+"원 \n-by Upbit");
+            return replier.reply(""+msg+"\n\n[현재가격]\n"+priceToString(parsingEtc(etc))+"원 (▼"+parsingChangePrice(changep)+"%) \n\n[김치프리미엄]\n"+exchangeKP(binance)+"% \n\n[금일최저가 ~ 금일최고가]\n"+priceToString(parsingLowPrice(lowp))+"원 ~ "+priceToString(parsingHighPrice(highp))+"원 \n\n[RSI Value]\n"+Rsi(candle)+" \n\n[금일거래량]\n"+priceToString(parsingTotal(total))+"원 \n-Upbit");
         }
         else
         {
-            return replier.reply(""+msg+"\n\n[현재가격]\n"+priceToString(parsingEtc(etc))+"원 (="+parsingChangePrice(changep)+"%) \n\n[김치프리미엄]\n"+exchangeKP(binance)+"% \n\n[금일최저가 ~ 금일최고가]\n"+priceToString(parsingLowPrice(lowp))+"원 ~ "+priceToString(parsingHighPrice(highp))+"원 \n\n[RSI Value]\n"+Rsi(candle)+" \n\n[금일거래량]\n"+priceToString(parsingTotal(total))+"원 \n-by Upbit");
+            return replier.reply(""+msg+"\n\n[현재가격]\n"+priceToString(parsingEtc(etc))+"원 (="+parsingChangePrice(changep)+"%) \n\n[김치프리미엄]\n"+exchangeKP(binance)+"% \n\n[금일최저가 ~ 금일최고가]\n"+priceToString(parsingLowPrice(lowp))+"원 ~ "+priceToString(parsingHighPrice(highp))+"원 \n\n[RSI Value]\n"+Rsi(candle)+" \n\n[금일거래량]\n"+priceToString(parsingTotal(total))+"원 \n-Upbit");
         }
     }
 
@@ -427,6 +427,39 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         Rsi(candle)
 
         printResult(parsingChangeRate(changer))
+
+        exchangeKP(binance)
+        
+      }
+
+      if (msg == "/니어프로토콜" || msg == "/니어" || msg == "/near" || msg == "/NEAR") 
+      {
+
+        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
+        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
+        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
+        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
+        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
+        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=NEARUSDT")
+        //var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-near&count=14")
+        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/minutes/1?market=krw-near&count=14")
+    
+        parsingEtc(etc)
+
+        parsingTotal(total)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        parsingChangeRate(changer)
+
+        parsingChangePrice(changep)
+
+        Rsi_1h(candle)
+
+        printNew(parsingChangeRate(changer))
 
         exchangeKP(binance)
         
