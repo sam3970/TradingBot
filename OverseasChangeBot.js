@@ -677,4 +677,76 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
         binanceResult(binancePrice(binance))
       }
+
+      if (msg == "/b리플" || msg == "/bxrp" || msg == "/BXRP") 
+      {
+        
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=XRPUSDT")
+        var total = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=XRPUSDT")
+        var highp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=XRPUSDT")
+        var lowp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=XRPUSDT")
+        var changer = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=XRPUSDT")
+        var changep = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=XRPUSDT")
+        //var candle = Utils.getHtmlFromWeb("https://www.binance.com/api/v3/klines?symbol=XRPUSDT&limit=14&interval=1d")
+        
+        parsingHighPrice(highp)
+
+        parsingChangePrice(changep)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        //Rsi(candle)
+
+        binanceResult(binancePrice(binance))
+      }
+
+      if (msg == "/b스텔라루멘" || msg == "/bxlm" || msg == "/BXLM") 
+      {
+        
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=XLMUSDT")
+        var total = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=XLMUSDT")
+        var highp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=XLMUSDT")
+        var lowp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=XLMUSDT")
+        var changer = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=XLMUSDT")
+        var changep = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=XLMUSDT")
+        //var candle = Utils.getHtmlFromWeb("https://www.binance.com/api/v3/klines?symbol=XRPUSDT&limit=14&interval=1d")
+        
+        parsingHighPrice(highp)
+
+        parsingChangePrice(changep)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        //Rsi(candle)
+
+        binanceResult(binancePrice(binance))
+      }
+
+      if (msg == "/b트론" || msg == "/btrx" || msg == "/BTRX") 
+      {
+        
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=TRXUSDT")
+        var total = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=TRXUSDT")
+        var highp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=TRXUSDT")
+        var lowp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=TRXUSDT")
+        var changer = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=TRXUSDT")
+        var changep = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=TRXUSDT")
+        //var candle = Utils.getHtmlFromWeb("https://www.binance.com/api/v3/klines?symbol=XRPUSDT&limit=14&interval=1d")
+        
+        parsingHighPrice(highp)
+
+        parsingChangePrice(changep)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        //Rsi(candle)
+
+        binanceResult(binancePrice(binance))
+      }
 }
