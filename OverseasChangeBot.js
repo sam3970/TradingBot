@@ -749,4 +749,124 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
         binanceResult(binancePrice(binance))
       }
+
+      if (msg == "/연파이낸스" || msg == "/yfi" || msg == "/YFI") 
+      {
+        
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=YFIUSDT")
+        var total = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=YFIUSDT")
+        var highp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=YFIUSDT")
+        var lowp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=YFIUSDT")
+        var changer = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=YFIUSDT")
+        var changep = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=YFIUSDT")
+        //var candle = Utils.getHtmlFromWeb("https://www.binance.com/api/v3/klines?symbol=YFIUSDT&limit=14&interval=1d")
+        
+        parsingHighPrice(highp)
+
+        parsingChangePrice(changep)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        //Rsi(candle)
+
+        binanceResult(binancePrice(binance))
+      }
+
+      if (msg == "/파일코인" || msg == "/fil" || msg == "/FIL") 
+      {
+        
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=FILUSDT")
+        var total = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=FILUSDT")
+        var highp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=FILUSDT")
+        var lowp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=FILUSDT")
+        var changer = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=FILUSDT")
+        var changep = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=FILUSDT")
+        //var candle = Utils.getHtmlFromWeb("https://www.binance.com/api/v3/klines?symbol=XRPUSDT&limit=14&interval=1d")
+        
+        parsingHighPrice(highp)
+
+        parsingChangePrice(changep)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        //Rsi(candle)
+
+        binanceResult(binancePrice(binance))
+      }
+
+      if (msg == "/유니스왑" || msg == "/uni" || msg == "/UNI") 
+      {
+        
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=UNIUSDT")
+        var total = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=UNIUSDT")
+        var highp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=UNIUSDT")
+        var lowp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=UNIUSDT")
+        var changer = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=UNIUSDT")
+        var changep = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=UNIUSDT")
+        //var candle = Utils.getHtmlFromWeb("https://www.binance.com/api/v3/klines?symbol=XRPUSDT&limit=14&interval=1d")
+        
+        parsingHighPrice(highp)
+
+        parsingChangePrice(changep)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        //Rsi(candle)
+
+        binanceResult(binancePrice(binance))
+      }
+
+      if (msg == "/레이븐" || msg == "/rvn" || msg == "/RVN") 
+      {
+        
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=RVNUSDT")
+        var total = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=RVNUSDT")
+        var highp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=RVNUSDT")
+        var lowp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=RVNUSDT")
+        var changer = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=RVNUSDT")
+        var changep = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=RVNUSDT")
+        //var candle = Utils.getHtmlFromWeb("https://www.binance.com/api/v3/klines?symbol=RVNUSDT&limit=14&interval=1d")
+        
+        parsingHighPrice(highp)
+
+        parsingChangePrice(changep)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        //Rsi(candle)
+
+        binanceResult(binancePrice(binance))
+      }
+
+      if (msg == "/리저브라이트" || msg == "/rsr" || msg == "/RSR") 
+      {
+        
+        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=RSRUSDT")
+        var total = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=RSRUSDT")
+        var highp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=RSRUSDT")
+        var lowp = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=RSRUSDT")
+        var changer = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=RSRUSDT")
+        var changep = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=RSRUSDT")
+        //var candle = Utils.getHtmlFromWeb("https://www.binance.com/api/v3/klines?symbol=RSRUSDT&limit=14&interval=1d")
+        
+        parsingHighPrice(highp)
+
+        parsingChangePrice(changep)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        //Rsi(candle)
+
+        binanceResult(binancePrice(binance))
+      }
 }

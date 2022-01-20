@@ -7,7 +7,15 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     {
         etc = etc.split(",")[9]
         etc = etc.split(":")[1]
-        return Math.round(etc * 100) / 100
+
+        if (msg == "/btt" || msg == "/비트토렌트" || msg == "/xec")
+        {
+          return parseFloat(etc).toFixed(4)
+        }
+        else
+        {
+          return Math.round(etc * 100) / 100
+        }   
     }
 
     //금일 총 거래대금
@@ -23,7 +31,15 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     {
         highp = highp.split(",")[7]
         highp = highp.split(":")[1]
-        return Math.round(highp * 100) / 100
+        
+        if (msg == "/btt" || msg == "/비트토렌트" || msg == "/xec")
+        {
+          return parseFloat(highp).toFixed(4)
+        }
+        else
+        {
+          return Math.round(highp * 100) / 100
+        }  
     }
 
     //금일 최저가
@@ -31,7 +47,15 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     {
         lowp = lowp.split(",")[8]
         lowp = lowp.split(":")[1]
-        return Math.round(lowp * 100) / 100
+                
+        if (msg == "/btt" || msg == "/비트토렌트" || msg == "/xec")
+        {
+          return parseFloat(lowp).toFixed(4)
+        }
+        else
+        {
+          return Math.round(lowp * 100) / 100
+        }  
     }
 
     //금일 변동율
@@ -47,7 +71,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     {
         changep = changep.split(",")[15]
         changep = changep.split(":")[1]
-        var changeRatio = (changep * 100).toFixed(2)
+        let changeRatio = (changep * 100).toFixed(2)
         return changeRatio
     }
 
@@ -66,7 +90,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       
       let rsi_result = 0
 
-      var candle_Num = new Array()
+      let candle_Num = new Array()
       
       for (let i=0; i<14 ;i++)
       {
@@ -114,9 +138,9 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       
       let rsi_result = 0
 
-      var candle_Num = new Array()
-      var candle_Num1 = new Array()
-      var candle_Num2 = new Array()
+      let candle_Num = new Array()
+      let candle_Num1 = new Array()
+      let candle_Num2 = new Array()
       
       for (let i=0; i<14 ;i++)
       {
@@ -161,7 +185,9 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     //천 단위 쉼표
     function priceToString(price) 
     {
-        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      let parts = price.toString().split("."); 
+      return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : ""); 
+      //return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
 
     //김프 계산
@@ -174,7 +200,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       }
       else
       {
-        var exchange = Utils.getHtmlFromWeb("https://exchange.jaeheon.kr:23490/query/USDKRW")   
+        let exchange = Utils.getHtmlFromWeb("https://exchange.jaeheon.kr:23490/query/USDKRW")   
         exchange = exchange.split("[")[1]
         exchange = exchange.split(",")[0]
 
@@ -183,8 +209,17 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         binance = binance.split("}")[0]
         binance = binance.replace(/\"/g, "");
 
-        var binkrw = exchange * binance
-        var diffPrice = (((parsingEtc(etc) - binkrw) / binkrw) * 100).toFixed(2)
+        let binkrw = exchange * binance
+
+        //BTT 1:1000 액면분할로 인한 시세 차이 조정
+        if (msg == "/btt" || msg == "/비트토렌트")
+        {
+          let diffPrice = (((parsingEtc(etc)*1000 - binkrw) / binkrw) * 100).toFixed(2)
+        }
+        else
+        {
+          let diffPrice = (((parsingEtc(etc) - binkrw) / binkrw) * 100).toFixed(2)
+        } 
         return diffPrice
       }
     }
@@ -225,31 +260,17 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
     if (room == "TradingBot" || room == "SangKyu" || room == "TradingBot2" || room == "TradingBot3" || room == "TradingBot4" || room == "TradingBot5" || room == "TradingBot6")
     {
-      if (msg == "/한강" || msg == "/한강물" || msg == "/한강물온도" || msg == "/한강물 온도" || msg == "/한강 온도" || msg == "/한강온도")
-      {
-        var temperuture = Utils.getHtmlFromWeb("https://api.hangang.msub.kr/")
-    
-        temperuture = temperuture.split(",")[2]
-        temperuture = temperuture.split(":")[1]
-        //temperuture = temperuture.split(".")[0]
-    
-        temperuture = temperuture.replace(/\"/gi, "")
-    
-        replier.reply("현재 한강물 온도는 "+temperuture+"도 입니다. -by msub");    
-      }
-
-
       if (msg == "/알고랜드"  || msg == "/algo" || msg == "/ALGO") 
       {
 
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-algo")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-algo")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-algo")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-algo")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-algo")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-algo")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ALGOUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/minutes/60?market=krw-algo&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-algo")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-algo")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-algo")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-algo")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-algo")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-algo")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ALGOUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/minutes/60?market=krw-algo&count=14")
     
         parsingEtc(etc)
 
@@ -274,14 +295,14 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       if (msg == "/1인치"  || msg == "/1inch" || msg == "/1INCH") 
       {
 
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-1inch")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-1inch")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-1inch")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-1inch")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-1inch")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-1inch")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=1INCHUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-1inch&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-1inch")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-1inch")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-1inch")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-1inch")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-1inch")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-1inch")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=1INCHUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-1inch&count=14")
     
         parsingEtc(etc)
 
@@ -306,14 +327,14 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       if (msg == "/에이브"  || msg == "/aave" || msg == "/AAVE") 
       {
 
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aave")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aave")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aave")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aave")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aave")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aave")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=AAVEUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-aave&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aave")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aave")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aave")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aave")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aave")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aave")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=AAVEUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-aave&count=14")
     
         parsingEtc(etc)
 
@@ -339,14 +360,14 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       if (msg == "/솔라나" || msg == "/솔루" || msg == "/sol" || msg == "/SOL") 
       {
 
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sol")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sol")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sol")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sol")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sol")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sol")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SOLUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-sol&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sol")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sol")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sol")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sol")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sol")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sol")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SOLUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-sol&count=14")
     
         parsingEtc(etc)
 
@@ -371,14 +392,14 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       if (msg == "/누사이퍼" || msg == "/nu" || msg == "/NU") 
       {
 
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-nu")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-nu")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-nu")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-nu")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-nu")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-nu")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=NUUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-nu&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-nu")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-nu")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-nu")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-nu")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-nu")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-nu")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=NUUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-nu&count=14")
     
         parsingEtc(etc)
 
@@ -403,14 +424,14 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       if (msg == "/폴리곤" || msg == "/matic" || msg == "/MATIC") 
       {
 
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-matic")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-matic")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-matic")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-matic")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-matic")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-matic")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MATICUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-matic&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-matic")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-matic")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-matic")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-matic")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-matic")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-matic")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MATICUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-matic&count=14")
     
         parsingEtc(etc)
 
@@ -435,15 +456,15 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       if (msg == "/니어프로토콜" || msg == "/니어" || msg == "/near" || msg == "/NEAR") 
       {
 
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=NEARUSDT")
-        //var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-near&count=14")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/minutes/1?market=krw-near&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-near")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=NEARUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-near&count=14")
+        //let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/minutes/1?market=krw-near&count=14")
     
         parsingEtc(etc)
 
@@ -467,14 +488,14 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
       if (msg == "/이클" || msg == "/이더리움클래식" || msg == "/etc" || msg == "/ETC") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-etc")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-etc")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-etc")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-etc")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-etc")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-etc")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ETCUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-etc&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-etc")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-etc")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-etc")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-etc")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-etc")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-etc")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ETCUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-etc&count=14")
     
         parsingEtc(etc)
 
@@ -497,14 +518,14 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
 if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xec")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xec")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xec")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xec")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xec")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xec")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=XECUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-xec&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xec")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xec")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xec")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xec")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xec")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xec")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=XECUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-xec&count=14")
     
         parsingEtc(etc)
 
@@ -528,14 +549,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
       
       if (msg == "/비체인" || msg == "/vet" || msg == "/VET") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-vet")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-vet")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-vet")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-vet")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-vet")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-vet")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=VETUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-vet&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-vet")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-vet")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-vet")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-vet")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-vet")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-vet")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=VETUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-vet&count=14")
     
         parsingEtc(etc)
 
@@ -558,14 +579,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
     
       if (msg == "/하이브" || msg == "/hive" || msg == "/HIVE") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hive")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hive")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hive")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hive")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hive")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hive")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=HIVEUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-hive&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hive")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hive")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hive")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hive")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hive")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hive")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=HIVEUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-hive&count=14")
     
         parsingEtc(etc)
 
@@ -588,14 +609,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
     
       if (msg == "/리플" || msg == "/리또속" || msg == "/리태식" || msg == "/xrp" || msg == "/XRP") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xrp")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xrp")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xrp")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xrp")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xrp")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xrp")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=XRPUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-xrp&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xrp")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xrp")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xrp")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xrp")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xrp")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xrp")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=XRPUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-xrp&count=14")
     
         parsingEtc(etc)
 
@@ -618,14 +639,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
     
       if (msg == "/이오스" || msg == "/뽀삐" || msg == "/eos" || msg == "/EOS") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eos")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eos")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eos")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eos")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eos")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eos")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=EOSUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-eos&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eos")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eos")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eos")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eos")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eos")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eos")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=EOSUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-eos&count=14")
     
         parsingEtc(etc)
 
@@ -648,14 +669,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
     
       if (msg == "/비트토렌트" || msg == "/비토" || msg == "/btt" || msg == "/BTT") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btt")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btt")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btt")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btt")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btt")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btt")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BTTUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-btt&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btt")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btt")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btt")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btt")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btt")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btt")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BTTUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-btt&count=14")
     
         parsingEtc(etc)
 
@@ -678,14 +699,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
       
       if (msg == "/칠리즈" || msg == "/칠리소스" || msg == "/chz" || msg == "/CHZ") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-chz")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-chz")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-chz")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-chz")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-chz")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-chz")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=CHZUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-chz&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-chz")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-chz")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-chz")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-chz")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-chz")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-chz")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=CHZUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-chz&count=14")
     
         parsingEtc(etc)
 
@@ -708,14 +729,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
     
       if (msg == "/쎄타토큰" || msg == "/theta" || msg == "/THETA") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-theta")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-theta")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-theta")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-theta")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-theta")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-theta")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=THETAUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-theta&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-theta")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-theta")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-theta")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-theta")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-theta")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-theta")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=THETAUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-theta&count=14")
     
         parsingEtc(etc)
 
@@ -738,14 +759,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
     
       if (msg == "/가스" || msg == "/심방구가스" || msg == "/gas" || msg == "/GAS")
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-gas")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-gas")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-gas")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-gas")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-gas")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-gas")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=GASUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-gas&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-gas")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-gas")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-gas")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-gas")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-gas")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-gas")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=GASUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-gas&count=14")
     
         parsingEtc(etc)
 
@@ -768,14 +789,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
     
       if (msg == "/비트코인" || msg == "/비코" || msg == "/대장" || msg == "/btc" || msg == "/비트" || msg == "/BTC") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btc")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btc")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btc")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btc")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btc")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btc")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BTCUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-btc&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btc")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btc")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btc")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btc")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btc")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btc")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BTCUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-btc&count=14")
     
         parsingEtc(etc)
 
@@ -798,14 +819,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
     
       if (msg == "/온톨로지" || msg == "/온톨" || msg == "/ont" || msg == "/ONT") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ont")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ont")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ont")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ont")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ont")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ont")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ONTUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ont&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ont")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ont")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ont")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ont")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ont")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ont")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ONTUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ont&count=14")
     
         parsingEtc(etc)
 
@@ -828,14 +849,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
     
       if (msg == "/이더리움" || msg == "/이더" || msg == "/eth" || msg == "/ETH") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eth")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eth")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eth")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eth")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eth")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eth")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ETHUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-eth&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eth")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eth")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eth")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eth")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eth")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-eth")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ETHUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-eth&count=14")
     
         parsingEtc(etc)
 
@@ -858,14 +879,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/에이다" || msg == "/아다" || msg == "/ada" || msg == "/ADA") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ada")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ada")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ada")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ada")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ada")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ada")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ADAUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ada&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ada")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ada")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ada")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ada")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ada")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ada")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ADAUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ada&count=14")
     
         parsingEtc(etc)
 
@@ -888,14 +909,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/메디블록" || msg == "/메디" || msg == "/med" || msg == "/MED") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-med")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-med")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-med")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-med")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-med")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-med")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MEDUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-med&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-med")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-med")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-med")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-med")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-med")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-med")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MEDUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-med&count=14")
     
         parsingEtc(etc)
 
@@ -918,14 +939,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/던프로토콜" || msg == "/던 프로토콜" || msg == "/던" || msg == "/던프" || msg == "/dawn" || msg == "/DAWN") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dawn")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dawn")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dawn")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dawn")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dawn")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dawn")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=DAWNUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-dawn&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dawn")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dawn")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dawn")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dawn")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dawn")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dawn")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=DAWNUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-dawn&count=14")
     
         parsingEtc(etc)
 
@@ -948,14 +969,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/퀀텀" || msg == "/qtum" || msg == "/QTUM") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtum")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtum")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtum")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtum")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtum")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtum")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=QTUMUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-qtum&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtum")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtum")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtum")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtum")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtum")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qtum")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=QTUMUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-qtum&count=14")
     
         parsingEtc(etc)
 
@@ -978,14 +999,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/체인링크" || msg == "/체링" || msg == "/채링" || msg == "/link" || msg == "/LINK") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-link")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-link")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-link")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-link")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-link")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-link")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=LINKUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-link&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-link")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-link")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-link")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-link")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-link")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-link")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=LINKUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-link&count=14")
     
         parsingEtc(etc)
 
@@ -1008,14 +1029,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/네오" || msg == "/neo" || msg == "/NEO") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-neo")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-neo")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-neo")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-neo")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-neo")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-neo")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=NEOUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-neo&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-neo")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-neo")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-neo")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-neo")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-neo")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-neo")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=NEOUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-neo&count=14")
     
         parsingEtc(etc)
 
@@ -1038,14 +1059,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/라이트코인" || msg == "/라코" || msg == "/라이트" || msg == "/ltc" || msg == "/LTC") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ltc")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ltc")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ltc")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ltc")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ltc")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ltc")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=LTCUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ltc&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ltc")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ltc")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ltc")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ltc")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ltc")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ltc")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=LTCUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ltc&count=14")
     
         parsingEtc(etc)
 
@@ -1068,14 +1089,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/웨이브" || msg == "/waves" || msg == "/WAVES") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waves")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waves")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waves")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waves")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waves")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waves")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=WAVESUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-waves&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waves")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waves")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waves")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waves")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waves")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waves")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=WAVESUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-waves&count=14")
     
         parsingEtc(etc)
 
@@ -1098,14 +1119,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/스텔라루멘" || msg == "/스텔라" || msg == "/루멘" || msg == "/스텔라루멘스" || msg == "/xlm" || msg == "/XLM") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xlm")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xlm")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xlm")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xlm")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xlm")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xlm")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=XLMUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-xlm&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xlm")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xlm")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xlm")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xlm")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xlm")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xlm")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=XLMUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-xlm&count=14")
     
         parsingEtc(etc)
 
@@ -1128,14 +1149,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/폴카닷" || msg == "/꼴까닥" || msg == "/꼴가닥" || msg == "/dot" || msg == "/DOT") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dot")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dot")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dot")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dot")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dot")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dot")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=DOTUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-dot&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dot")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dot")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dot")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dot")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dot")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dot")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=DOTUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-dot&count=14")
     
         parsingEtc(etc)
 
@@ -1158,14 +1179,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/트론" || msg == "/trx" || msg == "/TRX") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-trx")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-trx")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-trx")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-trx")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-trx")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-trx")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=TRXUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-trx&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-trx")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-trx")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-trx")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-trx")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-trx")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-trx")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=TRXUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-trx&count=14")
     
         parsingEtc(etc)
 
@@ -1188,14 +1209,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       /*if (msg == "/마로" || msg == "/maro" || msg == "/MARO") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-maro")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-maro")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-maro")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-maro")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-maro")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-maro")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MAROUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-maro&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-maro")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-maro")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-maro")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-maro")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-maro")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-maro")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MAROUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-maro&count=14")
     
         parsingEtc(etc)
 
@@ -1218,14 +1239,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/헤데라해시그래프" || msg == "/헤데라" || msg == "/해시" || msg == "/해시그래프" || msg == "/hbar" || msg == "/HBAR") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hbar")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hbar")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hbar")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hbar")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hbar")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hbar")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=HBARUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-hbar&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hbar")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hbar")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hbar")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hbar")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hbar")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hbar")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=HBARUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-hbar&count=14")
     
         parsingEtc(etc)
 
@@ -1248,14 +1269,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
       
       if (msg == "/스테이터스네트워크토큰" || msg == "/슨트" || msg == "/네트워크토큰" || msg == "/snt" || msg == "/SNT") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-snt")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-snt")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-snt")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-snt")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-snt")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-snt")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SNTUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-snt&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-snt")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-snt")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-snt")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-snt")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-snt")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-snt")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SNTUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-snt&count=14")
     
         parsingEtc(etc)
 
@@ -1278,14 +1299,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/톤" || msg == "/ton" || msg == "/TON") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ton")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ton")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ton")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ton")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ton")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ton")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=TONUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ton&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ton")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ton")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ton")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ton")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ton")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ton")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=TONUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ton&count=14")
     
         parsingEtc(etc)
 
@@ -1308,14 +1329,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/크립토닷컴체인" || msg == "/크립토" || msg == "/cro" || msg == "/CRO") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cro")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cro")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cro")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cro")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cro")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cro")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=CROUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-cro&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cro")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cro")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cro")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cro")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cro")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cro")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=CROUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-cro&count=14")
     
         parsingEtc(etc)
 
@@ -1338,14 +1359,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/스톰엑스" || msg == "/stmx" || msg == "/STMX") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stmx")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stmx")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stmx")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stmx")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stmx")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stmx")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=STMXUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-stmx&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stmx")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stmx")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stmx")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stmx")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stmx")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stmx")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=STMXUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-stmx&count=14")
     
         parsingEtc(etc)
 
@@ -1368,14 +1389,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
     
       if (msg == "/엠블" || msg == "/mvl" || msg == "/MVL") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mvl")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mvl")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mvl")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mvl")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mvl")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mvl")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MVLUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-mvl&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mvl")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mvl")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mvl")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mvl")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mvl")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mvl")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MVLUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-mvl&count=14")
     
         parsingEtc(etc)
 
@@ -1398,14 +1419,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/모스코인" || msg == "/moc" || msg == "/MOC") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-moc")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-moc")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-moc")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-moc")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-moc")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-moc")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MOCUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-moc&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-moc")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-moc")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-moc")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-moc")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-moc")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-moc")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MOCUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-moc&count=14")
     
         parsingEtc(etc)
 
@@ -1428,14 +1449,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/픽셀" || msg == "/pxl" || msg == "/PXL") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pxl")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pxl")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pxl")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pxl")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pxl")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pxl")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=PXLUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-pxl&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pxl")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pxl")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pxl")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pxl")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pxl")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-pxl")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=PXLUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-pxl&count=14")
     
         parsingEtc(etc)
 
@@ -1458,14 +1479,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/파워렛저" || msg == "/powr" || msg == "/POWR") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-powr")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-powr")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-powr")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-powr")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-powr")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-powr")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=POWRUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-powr&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-powr")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-powr")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-powr")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-powr")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-powr")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-powr")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=POWRUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-powr&count=14")
     
         parsingEtc(etc)
 
@@ -1488,14 +1509,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/샌드박스게이밍" || msg == "/샌드박스" || msg == "/샌박" || msg == "/sand") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sand")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sand")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sand")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sand")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sand")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sand")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SANDUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-sand&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sand")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sand")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sand")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sand")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sand")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sand")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SANDUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-sand&count=14")
     
         parsingEtc(etc)
 
@@ -1518,14 +1539,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/비트코인캐시" || msg == "/비캐" || msg == "/bch" || msg == "/BCH") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bch")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bch")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bch")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bch")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bch")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bch")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BCHUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-bch&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bch")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bch")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bch")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bch")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bch")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bch")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BCHUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-bch&count=14")
     
         parsingEtc(etc)
 
@@ -1548,14 +1569,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/비트코인캐시에이비씨" || msg == "/비트코인캐시에이비시" || msg == "/비트코인캐시abc" || msg == "/비캐abc" || msg == "/bcha" || msg == "/BCHA") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bcha")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bcha")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bcha")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bcha")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bcha")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bcha")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BCHAUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-bcha&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bcha")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bcha")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bcha")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bcha")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bcha")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bcha")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BCHAUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-bcha&count=14")
     
         parsingEtc(etc)
 
@@ -1578,14 +1599,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/질리카" ||  msg == "/zil" ||  msg == "/ZIL") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zil")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zil")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zil")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zil")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zil")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zil")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ZILUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-zil&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zil")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zil")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zil")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zil")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zil")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zil")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ZILUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-zil&count=14")
     
         parsingEtc(etc)
 
@@ -1608,14 +1629,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/비트코인골드" || msg == "/비골" || msg == "/btg" || msg == "/BTG") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btg")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btg")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btg")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btg")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btg")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btg")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BTGUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-btg&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btg")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btg")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btg")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btg")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btg")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-btg")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BTGUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-btg&count=14")
     
         parsingEtc(etc)
 
@@ -1638,14 +1659,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/스팀" || msg == "/steem" || msg == "/STEEM") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-steem")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-steem")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-steem")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-steem")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-steem")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-steem")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=STEEMUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-steem&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-steem")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-steem")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-steem")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-steem")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-steem")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-steem")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=STEEMUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-steem&count=14")
     
         parsingEtc(etc)
 
@@ -1668,14 +1689,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/스팀달러" || msg == "/sbd" || msg == "/SBD") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sbd")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sbd")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sbd")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sbd")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sbd")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sbd")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SBDUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-sbd&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sbd")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sbd")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sbd")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sbd")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sbd")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sbd")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SBDUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-sbd&count=14")
     
         parsingEtc(etc)
 
@@ -1698,14 +1719,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/플로우" || msg == "/flow" || msg == "/FLOW") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-flow")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-flow")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-flow")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-flow")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-flow")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-flow")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=FLOWUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-flow&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-flow")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-flow")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-flow")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-flow")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-flow")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-flow")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=FLOWUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-flow&count=14")
     
         parsingEtc(etc)
 
@@ -1728,14 +1749,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/오미세고" || msg == "/omg" || msg == "/OMG") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-omg")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-omg")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-omg")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-omg")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-omg")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-omg")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=OMGUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-omg&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-omg")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-omg")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-omg")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-omg")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-omg")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-omg")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=OMGUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-omg&count=14")
     
         parsingEtc(etc)
 
@@ -1758,14 +1779,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/밀크" || msg == "/우유" || msg == "/야놀자" || msg == "/mlk" || msg == "/MLK") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mlk")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mlk")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mlk")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mlk")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mlk")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mlk")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MLKUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-mlk&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mlk")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mlk")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mlk")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mlk")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mlk")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mlk")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MLKUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-mlk&count=14")
     
         parsingEtc(etc)
 
@@ -1788,14 +1809,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/시아코인" || msg == "/시아" || msg == "/sc" || msg == "/SC") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sc")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sc")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sc")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sc")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sc")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sc")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SCUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-sc&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sc")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sc")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sc")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sc")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sc")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sc")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SCUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-sc&count=14")
     
         parsingEtc(etc)
 
@@ -1818,14 +1839,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/스트라이크" || msg == "/스트" || msg == "/strk" || msg == "/STRK") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strk")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strk")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strk")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strk")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strk")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strk")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=STRKUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-strk&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strk")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strk")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strk")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strk")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strk")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strk")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=STRKUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-strk&count=14")
     
         parsingEtc(etc)
 
@@ -1848,14 +1869,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/메타디움" || msg == "/메타" || msg == "/meta" || msg == "/META") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=METAUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-meta&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-meta")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=METAUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-meta&count=14")
     
         parsingEtc(etc)
 
@@ -1878,14 +1899,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/스토리지" || msg == "/storj" || msg == "/STORJ") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-storj")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-storj")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-storj")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-storj")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-storj")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-storj")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=STORJUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-storj&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-storj")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-storj")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-storj")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-storj")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-storj")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-storj")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=STORJUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-storj&count=14")
     
         parsingEtc(etc)
 
@@ -1908,14 +1929,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/엔도르" || msg == "/edr") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-edr")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-edr")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-edr")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-edr")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-edr")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-edr")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=EDRUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-edr&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-edr")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-edr")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-edr")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-edr")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-edr")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-edr")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=EDRUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-edr&count=14")
     
         parsingEtc(etc)
 
@@ -1938,14 +1959,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/도지코인" || msg == "/도지" || msg == "/멍멍" || msg == "/왈왈" || msg == "/머스크" || msg == "/doge" || msg == "/DOGE") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-doge")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-doge")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-doge")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-doge")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-doge")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-doge")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=DOGEUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-doge&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-doge")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-doge")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-doge")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-doge")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-doge")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-doge")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=DOGEUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-doge&count=14")
     
         parsingEtc(etc)
 
@@ -1968,14 +1989,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/쎄타퓨엘" || msg == "/tfuel" || msg == "/TFUEL") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=TFUELUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-tfuel&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tfuel")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=TFUELUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-tfuel&count=14")
     
         parsingEtc(etc)
 
@@ -1998,14 +2019,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/스트라티스" || msg == "/strax" || msg == "/STRAX") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=STRAXUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-strax&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-strax")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=STRAXUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-strax&count=14")
     
         parsingEtc(etc)
 
@@ -2028,14 +2049,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/아하토큰" || msg == "/아하" || msg == "/aht" || msg == "/AHT") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aht")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aht")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aht")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aht")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aht")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aht")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=AHTUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-aht&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aht")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aht")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aht")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aht")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aht")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aht")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=AHTUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-aht&count=14")
     
         parsingEtc(etc)
 
@@ -2058,14 +2079,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/디센트럴랜드" || msg == "/디센" || msg == "/mana" || msg == "/MANA") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MANAUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-mana&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mana")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MANAUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-mana&count=14")
     
         parsingEtc(etc)
 
@@ -2088,14 +2109,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/센티널프로토콜" || msg == "/upp" || msg == "/UPP") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-upp")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-upp")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-upp")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-upp")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-upp")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-upp")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=UPPUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-upp&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-upp")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-upp")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-upp")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-upp")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-upp")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-upp")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=UPPUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-upp&count=14")
     
         parsingEtc(etc)
 
@@ -2120,14 +2141,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/베이직어텐션토큰" || msg == "/베이직" || msg == "/bat" || msg == "/BAT") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BATUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-bat&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bat")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BATUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-bat&count=14")
     
         parsingEtc(etc)
 
@@ -2150,14 +2171,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/보라"  || msg == "/bora" || msg == "/BORA") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BORAUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-bora&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bora")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BORAUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-bora&count=14")
     
         parsingEtc(etc)
 
@@ -2180,14 +2201,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/헌트"  || msg == "/hunt" || msg == "/HUNT") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hunt")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hunt")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hunt")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hunt")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hunt")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hunt")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=HUNTUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-hunt&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hunt")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hunt")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hunt")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hunt")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hunt")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-hunt")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=HUNTUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-hunt&count=14")
     
         parsingEtc(etc)
 
@@ -2210,14 +2231,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/카바"  || msg == "/kava" || msg == "/KAVA") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-kava")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-kava")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-kava")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-kava")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-kava")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-kava")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=KAVAUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-kava&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-kava")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-kava")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-kava")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-kava")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-kava")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-kava")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=KAVAUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-kava&count=14")
     
         parsingEtc(etc)
 
@@ -2240,14 +2261,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/카이버네트워크"  || msg == "/knc" || msg == "/KNC") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-knc")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-knc")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-knc")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-knc")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-knc")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-knc")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=KNCUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-knc&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-knc")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-knc")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-knc")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-knc")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-knc")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-knc")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=KNCUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-knc&count=14")
     
         parsingEtc(etc)
 
@@ -2270,14 +2291,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/엔진코인" || msg == "/엔진" || msg == "/enj" || msg == "/ENJ") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-enj")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-enj")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-enj")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-enj")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-enj")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-enj")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ENJUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-enj&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-enj")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-enj")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-enj")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-enj")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-enj")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-enj")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ENJUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-enj&count=14")
     
         parsingEtc(etc)
 
@@ -2300,14 +2321,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/온톨로지가스"  || msg == "/ong" || msg == "/ONG") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ong")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ong")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ong")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ong")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ong")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ong")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ONGUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ong&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ong")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ong")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ong")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ong")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ong")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ong")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ONGUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ong&count=14")
     
         parsingEtc(etc)
 
@@ -2330,14 +2351,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/에스티피"  || msg == "/stpt" || msg == "/STPT") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stpt")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stpt")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stpt")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stpt")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stpt")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stpt")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=STPTUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-stpt&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stpt")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stpt")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stpt")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stpt")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stpt")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-stpt")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=STPTUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-stpt&count=14")
     
         parsingEtc(etc)
 
@@ -2360,14 +2381,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/피르마체인"  || msg == "/fct2" || msg == "/FCT2") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-fct2")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-fct2")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-fct2")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-fct2")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-fct2")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-fct2")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=FCT2USDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-fct2&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-fct2")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-fct2")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-fct2")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-fct2")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-fct2")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-fct2")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=FCT2USDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-fct2&count=14")
     
         parsingEtc(etc)
 
@@ -2390,14 +2411,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/그로스톨코인"  || msg == "/grs" || msg == "/GRS") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-grs")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-grs")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-grs")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-grs")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-grs")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-grs")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=GRSUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-grs&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-grs")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-grs")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-grs")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-grs")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-grs")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-grs")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=GRSUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-grs&count=14")
     
         parsingEtc(etc)
 
@@ -2420,14 +2441,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/아이오에스티"  || msg == "/iost" || msg == "/IOST") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iost")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iost")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iost")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iost")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iost")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iost")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=IOSTUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-iost&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iost")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iost")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iost")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iost")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iost")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iost")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=IOSTUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-iost&count=14")
     
         parsingEtc(etc)
 
@@ -2450,14 +2471,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/아르고"  || msg == "/aergo" || msg == "/AERGO") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aergo")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aergo")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aergo")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aergo")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aergo")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aergo")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=AERGOUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-aergo&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aergo")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aergo")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aergo")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aergo")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aergo")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-aergo")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=AERGOUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-aergo&count=14")
     
         parsingEtc(etc)
 
@@ -2480,14 +2501,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/메인프레임"  || msg == "/mft" || msg == "/MFT") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mft")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mft")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mft")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mft")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mft")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mft")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MFTUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-mft&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mft")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mft")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mft")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mft")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mft")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mft")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MFTUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-mft&count=14")
     
         parsingEtc(etc)
 
@@ -2510,14 +2531,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/아크"  || msg == "/ark" || msg == "/ARK") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ark")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ark")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ark")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ark")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ark")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ark")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ARKUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ark&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ark")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ark")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ark")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ark")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ark")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ark")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ARKUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ark&count=14")
     
         parsingEtc(etc)
 
@@ -2540,14 +2561,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/캐리프로토콜"  || msg == "/cre" || msg == "/CRE") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cre")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cre")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cre")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cre")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cre")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cre")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=CREUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-cre&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cre")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cre")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cre")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cre")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cre")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cre")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=CREUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-cre&count=14")
     
         parsingEtc(etc)
 
@@ -2570,14 +2591,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/디카르고"  || msg == "/dka" || msg == "/DKA") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dka")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dka")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dka")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dka")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dka")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dka")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=DKAUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-dka&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dka")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dka")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dka")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dka")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dka")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-dka")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=DKAUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-dka&count=14")
     
         parsingEtc(etc)
 
@@ -2600,14 +2621,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/시빅"  || msg == "/cvc" || msg == "/CVC") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cvc")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cvc")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cvc")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cvc")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cvc")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cvc")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=CVCUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-cvc&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cvc")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cvc")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cvc")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cvc")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cvc")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-cvc")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=CVCUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-cvc&count=14")
     
         parsingEtc(etc)
 
@@ -2630,14 +2651,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/메탈"  || msg == "/mtl" || msg == "/MTL") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mtl")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mtl")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mtl")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mtl")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mtl")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mtl")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MTLUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-mtl&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mtl")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mtl")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mtl")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mtl")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mtl")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mtl")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MTLUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-mtl&count=14")
     
         parsingEtc(etc)
 
@@ -2660,14 +2681,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/썬더토큰"  || msg == "/tt" || msg == "/TT") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tt")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tt")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tt")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tt")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tt")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tt")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=TTUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-tt&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tt")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tt")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tt")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tt")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tt")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-tt")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=TTUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-tt&count=14")
     
         parsingEtc(etc)
 
@@ -2690,14 +2711,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/무비블록"  || msg == "/mbl" || msg == "/MBL") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mbl")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mbl")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mbl")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mbl")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mbl")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mbl")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MBLUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-mbl&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mbl")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mbl")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mbl")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mbl")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mbl")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-mbl")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=MBLUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-mbl&count=14")
     
         parsingEtc(etc)
 
@@ -2720,14 +2741,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/왁스"  || msg == "/waxp" || msg == "/WAXP") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waxp")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waxp")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waxp")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waxp")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waxp")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waxp")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=WAXPUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-waxp&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waxp")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waxp")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waxp")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waxp")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waxp")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-waxp")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=WAXPUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-waxp&count=14")
     
         parsingEtc(etc)
 
@@ -2751,14 +2772,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/오브스"  || msg == "/orbs" || msg == "/ORBS") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-orbs")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-orbs")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-orbs")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-orbs")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-orbs")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-orbs")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ORBSUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-orbs&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-orbs")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-orbs")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-orbs")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-orbs")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-orbs")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-orbs")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ORBSUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-orbs&count=14")
     
         parsingEtc(etc)
 
@@ -2781,14 +2802,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/테조스"  || msg == "/xtz" || msg == "/XTZ") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-XTZ")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-XTZ")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-XTZ")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-XTZ")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-XTZ")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-XTZ")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=XTZUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-XTZ&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-XTZ")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-XTZ")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-XTZ")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-XTZ")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-XTZ")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-XTZ")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=XTZUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-XTZ&count=14")
     
         parsingEtc(etc)
 
@@ -2811,14 +2832,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/저스트"  || msg == "/jst" || msg == "/JST") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-JST")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-JST")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-JST")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-JST")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-JST")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-JST")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=JSTUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-JST&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-JST")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-JST")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-JST")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-JST")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-JST")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-JST")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=JSTUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-JST&count=14")
     
         parsingEtc(etc)
 
@@ -2841,14 +2862,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/스와이프"  || msg == "/sxp" || msg == "/SXP") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SXP")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SXP")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SXP")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SXP")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SXP")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SXP")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SXPUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-SXP&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SXP")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SXP")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SXP")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SXP")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SXP")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SXP")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SXPUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-SXP&count=14")
     
         parsingEtc(etc)
 
@@ -2871,14 +2892,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/플레이댑"  || msg == "/pla" || msg == "/PLA") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PLA")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PLA")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PLA")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PLA")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PLA")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PLA")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=PLAUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-PLA&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PLA")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PLA")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PLA")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PLA")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PLA")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PLA")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=PLAUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-PLA&count=14")
     
         parsingEtc(etc)
 
@@ -2901,14 +2922,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/세럼"  || msg == "/srm" || msg == "/SRM") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SRM")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SRM")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SRM")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SRM")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SRM")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SRM")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SRMUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-SRM&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SRM")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SRM")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SRM")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SRM")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SRM")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SRM")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SRMUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-SRM&count=14")
     
         parsingEtc(etc)
 
@@ -2931,14 +2952,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/알파쿼크"  || msg == "/aqt" || msg == "/AQT") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AQT")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AQT")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AQT")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AQT")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AQT")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AQT")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=AQTUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-AQT&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AQT")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AQT")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AQT")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AQT")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AQT")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AQT")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=AQTUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-AQT&count=14")
     
         parsingEtc(etc)
 
@@ -2961,14 +2982,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/골렘"  || msg == "/glm" || msg == "/GLM") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-GLM")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-GLM")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-GLM")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-GLM")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-GLM")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-GLM")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=GLMUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-GLM&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-GLM")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-GLM")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-GLM")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-GLM")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-GLM")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-GLM")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=GLMUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-GLM&count=14")
     
         parsingEtc(etc)
 
@@ -2991,14 +3012,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/넴"  || msg == "/xem" || msg == "/XEM") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xem")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xem")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xem")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xem")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xem")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xem")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=XEMUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-xem&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xem")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xem")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xem")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xem")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xem")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-xem")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=XEMUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-xem&count=14")
     
         parsingEtc(etc)
 
@@ -3021,14 +3042,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/리스크"  || msg == "/lsk" || msg == "/LSK") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-lsk")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-lsk")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-lsk")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-lsk")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-lsk")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-lsk")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=LSKUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-lsk&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-lsk")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-lsk")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-lsk")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-lsk")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-lsk")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-lsk")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=LSKUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-lsk&count=14")
     
         parsingEtc(etc)
 
@@ -3051,14 +3072,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/아더"  || msg == "/ardr" || msg == "/ARDR") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ardr")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ardr")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ardr")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ardr")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ardr")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ardr")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ARDRUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ardr&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ardr")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ardr")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ardr")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ardr")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ardr")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ardr")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ARDRUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ardr&count=14")
     
         parsingEtc(etc)
 
@@ -3081,14 +3102,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/어거"  || msg == "/rep" || msg == "/REP") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rep")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rep")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rep")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rep")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rep")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rep")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=REPUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-rep&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rep")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rep")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rep")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rep")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rep")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rep")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=REPUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-rep&count=14")
     
         parsingEtc(etc)
 
@@ -3111,14 +3132,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/아이콘"  || msg == "/icx" || msg == "/ICX") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-icx")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-icx")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-icx")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-icx")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-icx")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-icx")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ICXUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-icx&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-icx")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-icx")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-icx")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-icx")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-icx")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-icx")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ICXUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-icx&count=14")
     
         parsingEtc(etc)
 
@@ -3141,14 +3162,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/폴리매쓰"  || msg == "/poly" || msg == "/POLY") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-poly")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-poly")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-poly")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-poly")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-poly")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-poly")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=POLYUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-poly&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-poly")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-poly")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-poly")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-poly")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-poly")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-poly")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=POLYUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-poly&count=14")
     
         parsingEtc(etc)
 
@@ -3171,14 +3192,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/제로엑스"  || msg == "/zrx" || msg == "/ZRX") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zrx")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zrx")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zrx")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zrx")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zrx")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zrx")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ZRXUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-zrx&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zrx")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zrx")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zrx")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zrx")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zrx")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-zrx")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ZRXUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-zrx&count=14")
     
         parsingEtc(etc)
 
@@ -3201,14 +3222,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/룸네트워크"  || msg == "/loom" || msg == "/Loom") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-loom")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-loom")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-loom")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-loom")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-loom")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-loom")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=LoomUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-loom&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-loom")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-loom")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-loom")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-loom")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-loom")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-loom")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=LoomUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-loom&count=14")
     
         parsingEtc(etc)
 
@@ -3231,14 +3252,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/리퍼리움"  || msg == "/rfr" || msg == "/RFR") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rfr")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rfr")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rfr")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rfr")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rfr")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rfr")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=RFRUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-rfr&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rfr")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rfr")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rfr")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rfr")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rfr")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-rfr")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=RFRUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-rfr&count=14")
     
         parsingEtc(etc)
 
@@ -3261,14 +3282,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/에브리피디아"  || msg == "/iq" || msg == "/IQ") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iq")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iq")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iq")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iq")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iq")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iq")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=IQUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-iq&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iq")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iq")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iq")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iq")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iq")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iq")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=IQUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-iq&count=14")
     
         parsingEtc(etc)
 
@@ -3291,14 +3312,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/아이오타"  || msg == "/iota" || msg == "/IOTA") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iota")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iota")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iota")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iota")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iota")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iota")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=IOTAUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-iota&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iota")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iota")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iota")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iota")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iota")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-iota")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=IOTAUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-iota&count=14")
     
         parsingEtc(etc)
 
@@ -3321,14 +3342,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/엘프"  || msg == "/elf" || msg == "/ELF") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-elf")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-elf")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-elf")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-elf")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-elf")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-elf")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ELFUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-elf&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-elf")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-elf")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-elf")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-elf")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-elf")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-elf")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ELFUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-elf&count=14")
     
         parsingEtc(etc)
 
@@ -3351,14 +3372,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/비트코인에스브이"  || msg == "/bsv" || msg == "/BSV") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bsv")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bsv")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bsv")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bsv")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bsv")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bsv")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BSVUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-bsv&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bsv")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bsv")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bsv")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bsv")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bsv")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-bsv")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=BSVUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-bsv&count=14")
     
         parsingEtc(etc)
 
@@ -3381,14 +3402,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/쿼크체인"  || msg == "/qkc" || msg == "/QKC") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qkc")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qkc")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qkc")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qkc")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qkc")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qkc")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=QKCUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-qkc&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qkc")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qkc")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qkc")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qkc")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qkc")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-qkc")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=QKCUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-qkc&count=14")
     
         parsingEtc(etc)
 
@@ -3411,14 +3432,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/앵커"  || msg == "/ankr" || msg == "/ANKR") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ankr")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ankr")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ankr")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ankr")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ankr")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ankr")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ANKRUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ankr&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ankr")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ankr")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ankr")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ankr")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ankr")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-ankr")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ANKRUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-ankr&count=14")
     
         parsingEtc(etc)
 
@@ -3441,14 +3462,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/코스모스"  || msg == "/atom" || msg == "/ATOM") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-atom")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-atom")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-atom")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-atom")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-atom")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-atom")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ATOMUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-atom&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-atom")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-atom")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-atom")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-atom")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-atom")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-atom")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=ATOMUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-atom&count=14")
     
         parsingEtc(etc)
 
@@ -3471,14 +3492,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/썸씽"  || msg == "/ssx" || msg == "/SSX") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SSX")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SSX")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SSX")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SSX")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SSX")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SSX")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SSXUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-SSX&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SSX")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SSX")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SSX")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SSX")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SSX")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-SSX")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=SSXUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-SSX&count=14")
     
         parsingEtc(etc)
 
@@ -3501,14 +3522,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/코박토큰"  || msg == "/cbk" || msg == "/CBK") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-CBK")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-CBK")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-CBK")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-CBK")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-CBK")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-CBK")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=CBKUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-CBK&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-CBK")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-CBK")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-CBK")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-CBK")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-CBK")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-CBK")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=CBKUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-CBK&count=14")
     
         parsingEtc(etc)
 
@@ -3531,14 +3552,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/휴먼스케이프"  || msg == "/hum" || msg == "/HUM") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-HUM")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-HUM")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-HUM")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-HUM")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-HUM")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-HUM")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=HUMUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-HUM&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-HUM")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-HUM")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-HUM")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-HUM")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-HUM")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-HUM")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=HUMUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-HUM&count=14")
     
         parsingEtc(etc)
 
@@ -3561,14 +3582,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/펀디엑스"  || msg == "/pundix" || msg == "/PUNDIX") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PUNDIX")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PUNDIX")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PUNDIX")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PUNDIX")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PUNDIX")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PUNDIX")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=PUNDIXUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-PUNDIX&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PUNDIX")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PUNDIX")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PUNDIX")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PUNDIX")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PUNDIX")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-PUNDIX")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=PUNDIXUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-PUNDIX&count=14")
     
         parsingEtc(etc)
 
@@ -3591,14 +3612,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
 
       if (msg == "/엑시인피니티"  || msg == "/axs" || msg == "/AXS") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AXS")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AXS")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AXS")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AXS")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AXS")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AXS")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=AXSUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-AXS&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AXS")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AXS")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AXS")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AXS")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AXS")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-AXS")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=AXSUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-AXS&count=14")
     
         parsingEtc(etc)
 
@@ -3621,14 +3642,14 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
       
       if (msg == "/스택스"  || msg == "/stx" || msg == "/STX") 
       {
-        var etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-STX")
-        var total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-STX")
-        var highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-STX")
-        var lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-STX")
-        var changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-STX")
-        var changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-STX")
-        var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=STXUSDT")
-        var candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-STX&count=14")
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-STX")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-STX")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-STX")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-STX")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-STX")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-STX")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=STXUSDT")
+        let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-STX&count=14")
     
         parsingEtc(etc)
 
@@ -3645,6 +3666,39 @@ if (msg == "/이캐시" || msg == "/xec" || msg == "/XEC")
         Rsi(candle)
 
         printResult(parsingChangeRate(changer))
+
+        exchangeKP(binance)
+      }
+
+      if (msg == "/위믹스"  || msg == "/wemix" || msg == "/WEMIX") 
+      {
+        let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-WEMIX")
+        let total = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-WEMIX")
+        let highp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-WEMIX")
+        let lowp = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-WEMIX")
+        let changer = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-WEMIX")
+        let changep = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-WEMIX")
+        let binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/price?symbol=WEMIXUSDT")
+        //let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/days?market=krw-WEMIX&count=14")
+        //let candle = Utils.getHtmlFromWeb("https://api.upbit.com/v1/candles/minutes/1?market=krw-WEMIX&count=14")
+    
+        parsingEtc(etc)
+
+        parsingTotal(total)
+
+        parsingHighPrice(highp)
+    
+        parsingLowPrice(lowp)
+
+        parsingChangeRate(changer)
+
+        parsingChangePrice(changep)
+
+        //Rsi(candle)
+        //Rsi_1h(candle)
+
+        //printResult(parsingChangeRate(changer))
+        printNew(parsingChangeRate(changer))
 
         exchangeKP(binance)
       }
