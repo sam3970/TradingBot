@@ -260,7 +260,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
     if (room == "TradingBot" || room == "SangKyu" || room == "TradingBot2" || room == "TradingBot3" || room == "TradingBot4" || room == "TradingBot5" || room == "TradingBot6")
     {
-      if (msg == "/알고랜드"  || msg == "/algo" || msg == "/ALGO") 
+      if (msg.includes("/알고랜드") || msg.includes("/algo") || msg.includes("/ALGO") )
       {
 
         let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-algo")
@@ -357,7 +357,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       }
 
 
-      if (msg == "/솔라나" || msg == "/솔루" || msg == "/sol" || msg == "/SOL") 
+      if (msg == "/솔라나" || msg == "/솔" || msg == "/sol" || msg == "/SOL") 
       {
 
         let etc = Utils.getHtmlFromWeb("https://api.upbit.com/v1/ticker?markets=KRW-sol")

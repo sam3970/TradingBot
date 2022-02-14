@@ -1,6 +1,6 @@
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
 
-    if (msg == "/한강" || msg == "/한강물" || msg == "/한강물온도" || msg == "/한강물 온도" || msg == "/한강 온도" || msg == "/한강온도")
+    if (msg.includes("/한강"))
     {
         let temperuture = Utils.getHtmlFromWeb("https://api.hangang.msub.kr/")
 

@@ -15,7 +15,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       highp = highp.split(":")[1]
       highp = highp.replace(/\"/g, "");
 
-      if (msg == "/b비트코인" || msg == "/b비트" || msg == "/bbtc" || msg == "/BBTC")
+      if (msg.includes("/b비트") || msg.includes("/bbtc") || msg.includes("/BBTC"))
       {
         return parseFloat(highp).toFixed(2)
       }
@@ -32,7 +32,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       lowp = lowp.split(":")[1]
       lowp = lowp.replace(/\"/g, "");
 
-      if (msg == "/b비트코인" || msg == "/b비트" || msg == "/bbtc" || msg == "/bBTC")
+      if (msg.includes("/b비트") || msg.includes("/bbtc") || msg.includes("/BBTC"))
       {
         return parseFloat(lowp).toFixed(2)
       }
@@ -62,7 +62,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     //현재 가격 소숫점 6자리 까지 표시
     function priceToString(price) 
     {
-      if (msg == "/b비트코인" || msg == "/b비트" || msg == "/bbtc" || msg == "/bBTC")
+      if (msg.includes("/b비트") || msg.includes("/bbtc") || msg.includes("/BBTC"))
       {
         return price.toFixed(2);
       }
@@ -174,7 +174,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       }
     }
       
-      if (msg == "/클레이튼" || msg == "/클레이" || msg == "/klay" || msg == "/KLAY") 
+      if (msg.includes("/클레이") || msg == "/klay" || msg == "/KLAY") 
       {
         
         var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=KLAYUSDT")
@@ -366,7 +366,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         binanceResult(binancePrice(binance))
       }
 
-      if (msg == "/홀로체인" || msg == "/hot" || msg == "/HOT") 
+      if (msg == "/홀로체인" || msg == "/hot" || msg == "/HOT" || msg.includes("핫소스")) 
       {
         
         var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=HOTUSDT")
@@ -462,7 +462,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         binanceResult(binancePrice(binance))
       }
 
-      if (msg == "/비토르토큰" || msg == "/비토르" || msg == "/vtho" || msg == "/VTHO") 
+      if (msg.includes("/비토르") || msg == "/vtho" || msg == "/VTHO") 
       {
         
         var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=VTHOUSDT")
@@ -486,7 +486,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         binanceResult(binancePrice(binance))
       }
 
-      if (msg == "/b비트코인" || msg == "/b비트" || msg == "/bbtc" || msg == "/BBTC") 
+      if (msg.includes("/b비트") || msg == "/bbtc" || msg == "/BBTC") 
       {
         
         var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=BTCUSDT")
@@ -510,7 +510,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         binanceResult(binancePrice(binance))
       }
 
-      if (msg == "/b이더리움" || msg == "/b이더" || msg == "/beth" || msg == "/BETH") 
+      if (msg.includes("/b이더") || msg == "/beth" || msg == "/BETH") 
       {
         
         var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=ETHUSDT")
@@ -582,7 +582,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         binanceResult(binancePrice(binance))
       }
 
-      if (msg == "/b니어프로토콜" || msg == "/b니어" || msg == "/bnear" || msg == "/BNEAR") 
+      if (msg.includes("/b니어") || msg == "/bnear" || msg == "/BNEAR") 
       {
         
         var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=NEARUSDT")
@@ -702,7 +702,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         binanceResult(binancePrice(binance))
       }
 
-      if (msg == "/b스텔라루멘" || msg == "/bxlm" || msg == "/BXLM") 
+      if (msg.includes("/b스텔라") || msg == "/bxlm" || msg == "/BXLM") 
       {
         
         var binance = Utils.getHtmlFromWeb("https://api.binance.com/api/v1/ticker/24hr?symbol=XLMUSDT")
